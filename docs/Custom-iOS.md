@@ -32,8 +32,8 @@ For the view, you'll need to make a subclass of `RCTWebView`.
 
 For the view manager, you need to make a subclass `RCTWebViewManager`. You must still include:
 
-* `(UIView *)view` that returns your custom view
-* The `RCT_EXPORT_MODULE()` tag
+- `(UIView *)view` that returns your custom view
+- The `RCT_EXPORT_MODULE()` tag
 
 ```objc
 // RCTCustomWebViewManager.h
@@ -93,7 +93,7 @@ RCT_EXPORT_VIEW_PROPERTY(finalUrl, NSString)
 
 You should refer to [RCTWebView.m](https://github.com/facebook/react-native/blob/master/React/Views/RCTWebView.m) in the React Native codebase to see what handlers are available and how they are implemented. You can extend any methods here to provide extra functionality.
 
-By default, most methods aren't exposed from RCTWebView. If you need to expose them, you need to create an [Objective C category](https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/ProgrammingWithObjectiveC/CustomizingExistingClasses/CustomizingExistingClasses.html), and then expose all the methods you need to use.
+By default, most methods aren't exposed from RCTWebView. If you need to expose them, you need to create an [Objective-C category](https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/ProgrammingWithObjectiveC/CustomizingExistingClasses/CustomizingExistingClasses.html), and then expose all the methods you need to use.
 
 ```objc
 // RCTWebView+Custom.h
@@ -142,25 +142,24 @@ If you open webpages that needs a Client Certificate for Authentication, you can
 
 This can be paired with a call from Javascript to pass a string label for the certificate stored in keychain and use native calls to fetch the certificate to create a credential object. This call can be made anywhere that makes sense for your application (e.g. as part of the user authentication stack). The only requirement is to make this call before displaying any webviews.
 
-### Allowing custom CAs (Certifica Authorities) and enabling SSL Pinning
+### Allowing custom CAs (Certificate Authorities) and enabling SSL Pinning
 
 If you need to connect to a server which has a self signed certificate, or want to perform SSL Pinning on the webview requests, you need to pass a dictionary with the host as the key, and the certificate as the value of each item:
-
 
 ```objc
 -(void)installCerts {
 
   // Get the bundle where the certificates in DER format are present.
   NSBundle *bundle = [NSBundle mainBundle];
-  
+
   NSMutableDictionary* certMap = [NSMutableDictionary new];
 
   NSData *rootCertData = [NSData dataWithContentsOfFile:[bundle pathForResource:@"example_ca" ofType:@"der"]];
 
   SecCertificateRef certificate = SecCertificateCreateWithData(NULL, (CFDataRef) rootCertData);
-   
+
   OSStatus err = SecItemAdd((CFDictionaryRef) [NSDictionary dictionaryWithObjectsAndKeys:(id) kSecClassCertificate, kSecClass, certificate, kSecValueRef, nil], NULL);
-  
+
   [certMap setObject:(__bridge id _Nonnull)(certificate) forKey:@"example.com"];
 
   [RNCWebView setCustomCertificatesForHost:certMap];
@@ -170,17 +169,18 @@ If you need to connect to a server which has a self signed certificate, or want 
 
 Multiple hosts can be added to the dictionary, and only one certificate for a host is allowed. The verification will succeed if any of the certificates in the chain of the request matches the one defined for the request's host.
 
-
 ## JavaScript Interface
 
 To use your custom web view, you may want to create a class for it. Your class must return a `WebView` component with the prop `nativeConfig.component` set to your native component (see below).
 
+> **Note:** since the removal of legacy-architecture support, your component receives the codegen (Fabric) props. In particular the source is delivered through the processed `newSource` prop — an object whose `headers` are an array of `{ name, value }` entries — and the legacy `source` prop is no longer passed.
+
 To get your native component, you must use `requireNativeComponent`: the same as for regular custom components.
 
 ```javascript
-import React, {Component} from 'react';
-import {WebView, requireNativeComponent, NativeModules} from 'react-native';
-const {CustomWebViewManager} = NativeModules;
+import React, { Component } from 'react';
+import { WebView, requireNativeComponent, NativeModules } from 'react-native';
+const { CustomWebViewManager } = NativeModules;
 
 export default class CustomWebView extends Component {
   render() {
@@ -208,7 +208,7 @@ If you are unsure how something should be implemented from the JS side, look at 
 ```javascript
 export default class CustomWebView extends Component {
   _onNavigationCompleted = (event) => {
-    const {onNavigationCompleted} = this.props;
+    const { onNavigationCompleted } = this.props;
     onNavigationCompleted && onNavigationCompleted(event);
   };
 
@@ -229,3 +229,10 @@ export default class CustomWebView extends Component {
   }
 }
 ```
+
+## Translations
+
+This file is available at:
+
+- [Brazilian portuguese](Custom-iOS.portuguese.md)
+- [Italian](Contributing.italian.md)

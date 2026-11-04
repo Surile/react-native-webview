@@ -6,7 +6,7 @@ Before you do this, you should be familiar with the concepts in [native UI compo
 
 To get started, you'll need to create a subclass of `RNCWebViewManager`, `RNCWebView`, and `RNCWebViewClient`. In your view manager, you'll then need to override:
 
-- `createReactWebViewInstance`
+- `createViewInstance`
 - `getName`
 - `addEventEmitters`
 
@@ -25,8 +25,8 @@ public class CustomWebViewManager extends RNCWebViewManager {
   }
 
   @Override
-  protected RNCWebView createRNCWebViewInstance(ThemedReactContext reactContext) {
-    return new CustomWebView(reactContext);
+  protected RNCWebView createViewInstance(ThemedReactContext reactContext) {
+    return super.createViewInstance(reactContext, new CustomWebView(reactContext));
   }
 
   @Override
@@ -35,13 +35,13 @@ public class CustomWebViewManager extends RNCWebViewManager {
   }
 
   @Override
-  protected void addEventEmitters(ThemedReactContext reactContext, WebView view) {
-    view.setWebViewClient(new CustomWebViewClient());
+  protected void addEventEmitters(ThemedReactContext reactContext, RNCWebViewWrapper view) {
+    view.getWebView().setWebViewClient(new CustomWebViewClient());
   }
 }
 ```
 
-You'll need to follow the usual steps to [register the module](native-modules-android.md#register-the-module).
+You'll need to follow the usual steps to [register the module](https://reactnative.dev/docs/native-modules-android#register-the-module-android-specific).
 
 ### Adding New Properties
 
@@ -70,8 +70,8 @@ public class CustomWebViewManager extends RNCWebViewManager {
   ...
 
   @ReactProp(name = "finalUrl")
-  public void setFinalUrl(WebView view, String url) {
-    ((CustomWebView) view).setFinalUrl(url);
+  public void setFinalUrl(RNCWebViewWrapper view, String url) {
+    ((CustomWebView) view.getWebView()).setFinalUrl(url);
   }
 }
 ```
@@ -168,6 +168,8 @@ public class CustomWebViewManager extends RNCWebViewManager {
 
 To use your custom web view, you may want to create a class for it. Your class must return a `WebView` component with the prop `nativeConfig.component` set to your native component (see below).
 
+> **Note:** since the removal of legacy-architecture support, your component receives the codegen (Fabric) props. In particular the source is delivered through the processed `newSource` prop — an object whose `headers` are an array of `{ name, value }` entries — and the legacy `source` prop is no longer passed.
+
 To get your native component, you must use `requireNativeComponent`: the same as for regular custom components.
 
 ```javascript
@@ -178,7 +180,10 @@ import { WebView } from 'react-native-webview';
 export default class CustomWebView extends Component {
   render() {
     return (
-      <WebView {...this.props} nativeConfig={{ component: RCTCustomWebView }} />
+      <WebView
+        {...this.props}
+        nativeConfig={{ component: RCTCustomWebView }}
+      />
     );
   }
 }
@@ -215,3 +220,10 @@ export default class CustomWebView extends Component {
   }
 }
 ```
+
+## Translations
+
+This file is available in:
+
+- [Brazilian portuguese](Custom-Android.portuguese.md)
+- [Italian](Custom-Android.italian.md)

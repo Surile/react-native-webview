@@ -18,8 +18,7 @@ One option (if you're loading HTML from an external source) is to inject an erro
     true;
   `}
   source={{
-    uri:
-      'https://bl.ocks.org/jamonholmgren/raw/48423fd99537283beace1daa2688e80f/',
+    uri: 'https://bl.ocks.org/jamonholmgren/raw/48423fd99537283beace1daa2688e80f/',
   }}
 />
 ```
@@ -51,10 +50,11 @@ It's possible to debug WebView contents in the iOS simulator or on a device usin
 
 #### Steps:
 
+1. Mark the WebView as being "inspectable" using the [`webviewDebuggingEnabled`](https://github.com/react-native-webview/react-native-webview/blob/master/docs/Reference.md#webviewDebuggingEnabled) prop
 1. Open Safari Preferences -> "Advanced" tab -> enable checkbox "Show Develop menu in menu bar"
-2. Start app with React Native WebView in iOS simulator or iOS device
-3. Safari -> Develop -> [device name] -> [app name] -> [url - title]
-4. You can now debug the WebView contents just as you would on the web
+1. Start app with React Native WebView in iOS simulator or iOS device
+1. Safari -> Develop -> [device name] -> [app name] -> [url - title]
+1. You can now debug the WebView contents just as you would on the web
 
 ##### Notes:
 
@@ -68,19 +68,7 @@ Also, if you don't see your device in the Develop menu, and you started Safari b
 
 It's possible to debug WebView contents in the Android emulator or on a device using Chrome DevTools.
 
-1. You will need to make the following change to `MainApplication.java` to enabled web contents debugging:
-
-```java
-  import android.webkit.WebView;
-
-  @Override
-  public void onCreate() {
-    super.onCreate();
-	  ...
-    WebView.setWebContentsDebuggingEnabled(true);
-  }
-```
-
+1. You will need to set the [`webviewDebuggingEnabled`](https://github.com/react-native-webview/react-native-webview/blob/master/docs/Reference.md#webviewDebuggingEnabled) prop on the WebView
 2. Start app with React Native WebView in Android emulator or Android device
 3. Open `chrome://inspect/#devices` on Chrome (Reference: [Remote debug Android devices](https://developer.chrome.com/docs/devtools/remote-debugging/))
 4. Select your device on the left and select "Inspect" on the WebView contents you'd like to inspect
@@ -93,3 +81,10 @@ It's possible to debug WebView contents in the Android emulator or on a device u
 When debugging on device you must enable USB debugging in your device settings:
 
 Settings -> System -> About Phone -> Developer options -> enable USB debugging
+
+## Translations
+
+This file is available in:
+
+- [Brazilian portuguese](Debugging.portuguese.md)
+- [Italian](Debugging.italian.md)
